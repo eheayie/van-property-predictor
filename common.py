@@ -137,13 +137,26 @@ def make_model(random_state: int = 42) -> Pipeline:
     return Pipeline([("pre", pre), ("gbm", gbm)])
 
 
-def predict_log_fn(model):
-    """Return f(array_or_df) -> log value; used by SHAP (which passes numpy arrays)."""
-    def f(data):
-        df = pd.DataFrame(data, columns=FEATURES)
-        for c in NUM_COLS:
-            df[c] = pd.to_numeric(df[c], errors="coerce")
-        for c in CAT_COLS:
-            df[c] = df[c].astype(str)
-        return model.predict(df)
-    return f
+def encode_for_shap(model, df: pd.DataFrame) -> np.ndarray:
+    """Numeric version of the features (categories ordinal-encoded) so SHAP can mask them."""
+    return model.named_steps["pre"].transform(df[FEATURES]).astype(float)
+
+
+def make_shap_explainer(model, background_df: pd.DataFrame):
+    """Explainer over the encoded feature space (columns are in FEATURES order)."""
+    import shap
+
+    gbm = model.named_steps["gbm"]
+    return shap.Explainer(gbm.predict, encode_for_shap(model, background_df),
+                          feature_names=FEATURES)
+
+
+def explain_rows(explainer, model, df: pd.DataFrame):
+    """SHAP values for rows of df. Shows the original (readable) values in plots."""
+    import shap
+
+    sv = explainer(encode_for_shap(model, df))
+    return shap.Explanation(
+        values=sv.values, base_values=sv.base_values,
+        data=df[FEATURES].to_numpy(dtype=object), feature_names=FEATURES,
+    )
