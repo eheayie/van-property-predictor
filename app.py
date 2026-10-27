@@ -33,7 +33,7 @@ bundle, metrics = load_artifacts()
 model, cats, defaults = bundle["model"], bundle["categories"], bundle["defaults"]
 year = bundle["assessment_year"]
 
-st.title("🏠 Vancouver Property Value Predictor")
+st.title("Vancouver Property Value Predictor")
 st.write(
     f"Estimates the **BC Assessment value** of a Vancouver property ({year} assessments) "
     "from its type, zoning, location, and age, using a gradient boosting model trained on the "
