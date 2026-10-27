@@ -8,7 +8,7 @@ import pandas as pd
 import shap
 import streamlit as st
 
-from common import CAT_COLS, FEATURES, predict_log_fn
+from common import CAT_COLS, FEATURES, explain_rows, make_shap_explainer
 
 st.set_page_config(page_title="Vancouver Property Value Predictor", page_icon="🏠")
 
@@ -26,8 +26,7 @@ def load_artifacts():
 
 @st.cache_resource
 def get_explainer(_model, _background):
-    return shap.Explainer(predict_log_fn(_model), _background.to_numpy(dtype=object),
-                          feature_names=FEATURES)
+    return make_shap_explainer(_model, _background)
 
 
 bundle, metrics = load_artifacts()
@@ -77,7 +76,7 @@ st.caption(f"Typical error on held-out properties: about {typical_err:.0f}% (med
 
 st.subheader("Why this prediction?")
 explainer = get_explainer(model, bundle["background"])
-explanation = explainer(row.to_numpy(dtype=object))
+explanation = explain_rows(explainer, model, row)
 fig = plt.figure()
 shap.plots.waterfall(explanation[0], show=False)
 st.pyplot(fig, clear_figure=True)
