@@ -19,7 +19,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.impute import SimpleImputer
 
-from common import CAT_COLS, FEATURES, NUM_COLS, make_model, predict_log_fn, prepare_dataset
+from common import (CAT_COLS, FEATURES, NUM_COLS, explain_rows, make_model,
+                    make_shap_explainer, prepare_dataset)
 
 RANDOM_STATE = 42
 
@@ -49,10 +50,8 @@ def explain(model, X_train, X_test):
 
     background = X_train.sample(100, random_state=RANDOM_STATE)
     sample = X_test.sample(300, random_state=RANDOM_STATE)
-    # Mixed-type data -> hand SHAP plain arrays and rebuild the DataFrame inside predict
-    explainer = shap.Explainer(predict_log_fn(model), background.to_numpy(dtype=object),
-                               feature_names=FEATURES)
-    sv = explainer(sample.to_numpy(dtype=object))
+    explainer = make_shap_explainer(model, background)
+    sv = explain_rows(explainer, model, sample)
 
     plt.figure()
     shap.plots.bar(sv, show=False)
