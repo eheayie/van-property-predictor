@@ -2,7 +2,7 @@
 
 An end-to-end machine learning project: public data → feature engineering → baselines vs. model → SHAP explainability → deployed Streamlit app.
 
-**Live demo:** _add your Streamlit Cloud link here_
+**Live demo:** https://vancouver-property-predictor.streamlit.app
 
 ## Problem
 Predict the BC Assessment value of a property in the City of Vancouver from its type (strata/land), zoning, neighbourhood, postal area, and age.
