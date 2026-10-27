@@ -1,0 +1,39 @@
+{
+  "results": {
+    "Baseline: overall median": {
+      "mae": 1364756.9583162395,
+      "median_abs_pct_error": 52.37362885934341,
+      "rmse": 7356270.615412288,
+      "r2_log": -4.801511440599704e-05
+    },
+    "Baseline: neighbourhood + type median": {
+      "mae": 913876.8405232456,
+      "median_abs_pct_error": 21.68674698795178,
+      "rmse": 7134724.248564198,
+      "r2_log": 0.5971196744696252
+    },
+    "Ridge regression": {
+      "mae": 910605.1934189359,
+      "median_abs_pct_error": 23.427578029002166,
+      "rmse": 7145411.939789135,
+      "r2_log": 0.6053814665674604,
+      "cv_rmse_log": 0.4992120006309087
+    },
+    "Gradient boosting": {
+      "mae": 766668.966628853,
+      "median_abs_pct_error": 16.375467030811127,
+      "rmse": 6751448.3899104735,
+      "r2_log": 0.7612965403717367,
+      "cv_rmse_log": 0.38744083827581305
+    }
+  },
+  "best": "Gradient boosting",
+  "n_properties": 222525,
+  "mae_improvement_pct_vs_baseline": 16.108064825245805,
+  "assessment_year": 2026,
+  "median_pct_error_by_type": {
+    "LAND": 11.57,
+    "OTHER": 109.61,
+    "STRATA": 19.98
+  }
+}
